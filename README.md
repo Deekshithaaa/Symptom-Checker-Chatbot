@@ -1,94 +1,134 @@
-# Symptom Checker Chatbot ai 
+[Symptom_Checker_Chatbot_README.md](https://github.com/user-attachments/files/21997057/Symptom_Checker_Chatbot_README.md)
+# Symptom Checker Chatbot
 
-![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
+<div align="center">
 
-A simple chatbot that can help users check their symptoms and provide relevant information. This chatbot uses natural language processing (NLP) techniques and a recurrent neural network (RNN) model to understand user queries and respond accordingly.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4facfe,100:00f2fe&height=200&section=header&text=Symptom%20Checker%20Chatbot&fontSize=42&fontColor=fff&animation=fadeIn&fontAlign=50&desc=Python%20%7C%20Flask%20%7C%20PyTorch%20RNN%20%7C%20NLTK&descSize=16&descAlign=50&descAlignY=75" />
 
-## Table of Contents
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](#)
+[![Flask](https://img.shields.io/badge/Flask-000?style=for-the-badge&logo=flask&logoColor=white)](#)
+[![PyTorch](https://img.shields.io/badge/PyTorch-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white)](#)
+[![NLTK](https://img.shields.io/badge/NLTK-NLP-154F8B?style=for-the-badge)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Training](#training)
-- [Dependencies](#dependencies)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#Contact)
-- [About the Maintainer](#about-the-maintainer)
+</div>
 
-## Introduction
+---
 
-This repository contains code for a symptom checker chatbot. The chatbot can engage in conversations with users, gather information about their symptoms, and provide information about potential conditions or nearby medical centers. It uses a pre-trained RNN model for natural language understanding.
+## 📌 Overview
+An interactive **health symptom assistant** that understands free‑text inputs and suggests relevant intents (e.g., fever, cough) and nearby medical center information.  
+It uses a **PyTorch RNN** for intent classification, **NLTK** utilities for tokenization/stemming, and a **Flask** UI for conversational interaction.
 
-## Getting Started
+> **Disclaimer:** This tool is for **educational/demonstration purposes** only and **not** a substitute for professional medical advice.
 
-To get started with the Symptom Checker Chatbot, follow these steps:
+---
 
-1. Clone the repository to your local machine:
+## 🧠 How It Works
+1. **Preprocess**: Text is tokenized and stemmed via `nltk_utils.py`.
+2. **Vectorize**: Inputs are converted to numerical tensors compatible with the model.
+3. **Infer**: A trained **RNN** (weights in `data_rnn.pth`) predicts an **intent** from `intents.json`.
+4. **Respond**: The Flask app renders a chat UI and replies; when relevant, it surfaces entries from `medical_centers.json`.
 
-   ```
-   git clone https://github.com/your-username/symptom-checker-chatbot.git
-   ```
+---
 
-2. Install the required dependencies:
-
-   ```
-   pip install -r requirements.txt
-   ```
-
-3. Download the necessary data files and place them in the appropriate directories:
-   - `intents.json`: Contains predefined intents for the chatbot.
-   - `data_rnn.pth`: Pre-trained RNN model for natural language understanding.
-   - `medical_centers.json`: Data file containing information about medical centers.
-
-## Usage
-
-To use the Symptom Checker Chatbot, run the `app.py` file:
-
+## 🗂 Project Structure
 ```
+.
+├── app.py                # Flask entrypoint (serves chat UI & routes)
+├── chat.py               # Chat wrapper that loads model & runs inference
+├── train.py              # Training loop to build/update the RNN model
+├── model.py              # RNN model architecture
+├── model_chat.py         # Model utilities used during inference
+├── nltk_utils.py         # Tokenization/stemming helpers (NLTK)
+├── intents.json          # Labeled intents, patterns, & responses
+├── medical_centers.json  # Sample data for nearby facilities
+├── data_rnn.pth          # Pretrained model weights (binary)
+├── templates/            # HTML templates (Flask)
+├── static/               # CSS/JS assets
+├── requirements.txt
+└── LICENSE
+```
+
+---
+
+## 🚀 Quickstart
+
+### 1) Clone & Create a Virtual Env
+```bash
+git clone https://github.com/Deekshithaaa/Symptom-Checker-Chatbot.git
+cd Symptom-Checker-Chatbot
+
+python -m venv venv
+# Windows: venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+```
+
+### 2) Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+> If NLTK raises missing resource errors, run:
+> ```python
+> python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
+> ```
+> (Only if your environment needs these.)
+
+### 3) Run the App
+```bash
 python app.py
 ```
+Open **http://127.0.0.1:5000/** in your browser.
 
-This will start a Flask web application that you can interact with. Visit the URL `http://localhost:5000` in your web browser to access the chat interface.
+---
 
-## Training
-
-If you want to retrain the RNN model or modify the chatbot's behavior, follow these steps:
-
-1. Modify the intents and patterns in `intents.json` to customize the chatbot's responses.
-
-2. Run the training script to retrain the RNN model:
-
-   ```
+## 🧪 Retraining the Model
+Customize intents or extend the domain:
+1. Edit **`intents.json`** to add new patterns/responses.
+2. Train:
+   ```bash
    python train.py
    ```
+3. The script emits a new `.pth` file. Update the model path in **`chat.py`** (the `FILE` constant) to your new weights.
 
-3. Save the trained model with a new filename and update the `FILE` variable in `chat.py` with the new filename.
+---
 
-## Dependencies
+## 🔌 Configuration
+- **Model path**: set in `chat.py` (points to the `.pth` file to load).
+- **Medical centers**: update `medical_centers.json` with your region’s data.
+- **Port/host**: adjust in `app.py` if needed (Flask dev server).
 
-The Symptom Checker Chatbot relies on the following dependencies:
+---
 
-- Python 3.x
-- PyTorch
-- Flask
-- NLTK
-- geocoder
+## 📡 Endpoints
+- **GET /** → Chat UI (Flask template).  
+*(All messaging typically flows through the web form; no public REST contract is guaranteed.)*
 
-You can install these dependencies using the provided `requirements.txt` file.
+---
 
-## Contributing
+## 🧱 Limitations
+- A compact RNN intent classifier – not a diagnostic model.
+- Predictions depend on coverage/design of `intents.json`.
+- No PHI storage; example data only. Add your own privacy controls for production.
 
-If you'd like to contribute to this project, feel free to fork the repository and submit pull requests. Contributions are welcome, whether it's bug fixes, feature enhancements, or documentation improvements.
+---
 
-## License
+## 🤝 Contributing
+PRs and issues are welcome! Consider:
+- Expanding intents and utterances
+- Improving the model (e.g., GRU/LSTM, attention, transformers)
+- Adding unit tests for preprocessing & model I/O
+- Packaging a minimal REST API for headless use
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+---
 
-## Contact
+## 👩‍💻 Maintainer
+**Deekshitha Obulreddygari — Full Stack Developer**  
+📧  [obulreddygarideekshitha@gmail.com](mailto:obulreddygarideekshitha@gmail.com)  
+🔗  [linkedin.com/in/deekshitha-obulreddygari](https://linkedin.com/in/deekshitha-obulreddygari)  
+📍  Phoenix, AZ
 
-For questions or collaboration opportunities, feel free to contact Deekshitha Obulreddygari at obulreddygarideekshitha@gmail.com.
+---
 
-## About the Maintainer
-
-This Symptom Checker Chatbot project is currently maintained by Deekshitha Obulreddygari. Deekshitha is a Java Full Stack Developer with over 4 years of experience in designing, developing, and deploying scalable web applications. She specializes in building end-to-end solutions, from backend services to responsive front-end interfaces, and is proficient in technologies like Java, Spring Boot, React, and various databases. Her focus is on delivering high-quality code and collaborating to solve complex technical challenges.
+## 📄 License
+This project is licensed under the **MIT License**. See `LICENSE` for details.
