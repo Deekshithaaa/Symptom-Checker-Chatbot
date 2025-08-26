@@ -1,4 +1,4 @@
-[Symptom_Checker_Chatbot_README.md](https://github.com/user-attachments/files/21997057/Symptom_Checker_Chatbot_README.md)
+
 # Symptom Checker Chatbot
 
 <div align="center">
